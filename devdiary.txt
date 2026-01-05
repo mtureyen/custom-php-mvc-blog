@@ -1,0 +1,156 @@
+1 woche php basics gelernt (bro code video) syntax verstanden zusammenhänge verstanden
+ende der 1 woche pdo setup db setup login register setup video angeguckt und verstanden
+in der ersten woche noch selber die basics gelernt und im video mitverfolgt wie man mit xampp umgeht
+hab mich dann aber schnell eingefunden und verstanden dass ich dasselbe mit docker machen kann und da
+docker sowieso ein bonus ist hab ich mich für docker entschieden. im video wurde xampp und apache verwendet
+
+2 woche
+videos zu mvc framework login register angeschaut und gemerkt dass die projektstruktur ähnlich aber immer unterschiedlich ist
+KI am besten gefragt für ein rat und im nachhinein dann mich für eine src-struktur entschieden.
+ordner erstellt für die blog challenge (moderne src-struktur)
+docker eingerichtet indem ich in nginx ordner die default.conf file erstellt hab in die php file die Dockerfile erstellt hab und docker-compose.yml erstellt hab.
+docker hat dann funktioniert
+composer auch eingerichtet, die hat ein composer.json gegeben dort hab ich ein verweis auf src eingestellt
+Brainstormed und zum folgenden entschluss gekommen: ER-Diagramm für die DB erstellen bevor die db implementiert wird.
+Am anfang zu weit gedacht mit likes reposts etc. aber im endeffekt doch nur die notwendigsten features eingebaut damit man sich an die aufgabenstellung haltet.
+ER-Diagramm erstellt mithilfe von KI (gesagt was die primary und foreign keys sind) und auf mermaid.live visualisiert
+in src/Service/Database.php erstellt
+docker-compose.yml angepasst da wir jetzt eine datenbank haben und phpmyadmin auch eingefügt da wir die db verwalten müssen
+unser sql create table code importiert in der phpmyadmin unter blog-db
+was wichtig war beim table code ist das ENGINE=InnoDB am ende, damit kann man sich auch sicher sein dass foreign keys auch wirklich funktionieren, da anscheinend
+bei der alten MyISAM-Engine ignoriert wurden.
+ON DELETE CASCADE ist dafür da wenn ein user sich löscht, dass all seine Beiträge verschwinden sodass keine Datenleichen entstehen und die DB sauber bleibt.
+im terminal war wenn man docker ausgeführt hat  the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+das hieß einfach nur dass man die version nummer nicht mehr in der yml datei brauchte also hab ich die zeile entfernt
+ersten controller erstellt die für die startseite zustendig ist unter src/Controller/HomeController.php
+in index.php den router gebaut und als case index.php dann zum Homecontroller verwiesen
+ich hab auch weitergedacht bevor ich weiter gearbeitet hab und mir ist bewusst gewesen dass für den login und den register case ein Authentification verweis kommen
+muss zur jeweiligen instanz, instanz aufbau ist immer gleich je nach case und dann würde beim case login und register
+dann etwas WIE beim case login müsste dann $login = new HomeLogin();     $login->index() stehen (aktuell namengebung ist noch nicht entschieden worden beim schreiben)
+da es OOP ist, ist das eigentlich nur logisches Verständnis, da der Ablauf immer derselbe ist.
+persönlich etwas weiter gedacht und verstanden dass es ja ein Authentification ist, deswegen kann man register und login in einem fassen in einem authcontroller
+anstatt beides einzelnd zu machen.
+AuthController.php erstellt in src/controller aber als platzhalter erst alles simpel ausgefüllt damit wir das schonmal in dem index.php bei den cases anpassen können
+und die nutzer weiterleiten können zum login und register.
+ich hatte plötzlich eine frage im kopf undzwar wenn ich das deploye für jemand anderen, dann muss er ja die sql create table code neu importieren
+da das nicht automatisch gemacht wird. deswegen hab ich damit es sehr leicht ist für andere mein "produkt" zu testen die db automatisch importieren lassen
+was ich nun gemacht habe ist eine ./database/init.sql erstellt und dort mein create table sql code rein gepackt. dann im docker-compose.yml hab ich unter volumes
+die datenbank automatisch initialisiert (vorher musste ich die datenbank einmal resetten damit ich sicher gehen konnte dass es beim neustart gut funktioniert) außerdem
+wurde die init.sql etwas angepasst mithilfe ki -> create table if not exists damit das skript nicht warum auch immer doppelt ausgeführt wird.
+AuthController angepasst sodass man sich registrieren kann und password gehashed wird. User.php erstellt weil dort das verarbeitet wird. und register.php erstellt wo
+der user sein input eingeben kann visuell. er wird weitergeleitet wenn er sich registriert aber kann auch sich direkt einloggen wenn er schon ein acc hat.
+in user.php bauen wir eine verbindung zur db auf und inserten dann in die sqldb unseren neuen user in der funktion create
+findbyusername sucht uns den nutzernamen raus wenn es in der db existiert.
+in templates(views)erstellen wir login.php und register.php damit wir uns im frontend registrieren und login können.
+dort wird über post an unseren authcontroller alles weitergegeben und wir registrieren uns oder melden uns an
+unser logout eingestellt und alle session variablen und cookies gelöscht, ebenfalls session auf dem server vernichtet und auf die startseite weitergeleitet.
+home.php ebenfalls in templates reingemacht und den homecontroller darauf verwiesen.
+beim logout ist fehlermeldung 404 gekommen, da ich vergessen hab ein case in index für logout zu machen. jetzt funktioniert es aber und wir werden zur startseite
+weitergeleitet(abgemeldet).
+da die nutzer sich registrieren, aber deren passwort aktuell nicht zurücksetzen können hab ich wert darauf gelegt das man beim passwort eingeben bei der registierung
+ebenfalls sein passwort wiederholt damit man keine fehler macht, das hab ich erst beim view(templates) gemacht danach in der logik (controller).
+
+so aktuell läuft das fundament (docker, datenbank, routing, mvc-struktur, composer, autoloading)
+das usersystem funktioniert ebenfalls (registierung, login, session management, logout)
+was noch zutun ist:
+blog features(posts erstellen, posts anzeigen, kommentare schreiben und anzeigen, posts kommentare löschen (als admin/user rechte), design umändern!)
+
+was mir persönlich noch wichtiger ist: NOCH EINFACHERES DEPLOYMENT
+deswegen erstell ich jetzt noch paar skripts damit man nicht extra ins cmd terminal geht und alle docker befehle ausführt sondern das soll mit einem klick gehen.
+start_server und stop_server als batch dateien erstellt damit man wirklich jeder person alles vereinfacht.
+
+so damit wir posts posten können brauchen wir in ./Model post.php wo wir jetzt ein post createn können und in die datenbank inserten können.
+abgesehen davon brauchen wir ein PostController der die daten aus dem formular $_POST abfängt und prüft ob der titel leer ist oder der user eingeloggt ist.
+er speichert nicht selbst sondern das macht unser post.php
+create.php ist mal wieder unser "view" wo wir sehen was gerade passiert im vordergrund, es schickt die daten an den controller
+Controller -> Model -> View         der Controller ist der Einzige der mit beiden Seiten redet.
+
+in index.php mein routing angepasst aber ich kam nicht auf die seite (vermutung war button noch nicht verändert sodass er jemanden weiterleitet), geprüft ob das der
+fall ist indem ich http://localhost:8080/post/create im angemeldeten zustand in die adresszeile angegeben hab. -> ja es lag am button
+den hab ich dann in home.php angepasst und alles hat perfekt funktioniert.
+
+damit man auf der startseite auch jetzt die posts sieht hab ich unter Post.php die Methode findAll erstellt die alle posts anzeigt.
+in controller hab ich die daten aus der db geholt indem ich model post imported hab und findAll benutzt hab.
+in home.php ist eine schleife um die posts anzuzeigen und immer in einem neuen linebreak durch nl2br.
+
+in home.php hab ich das noch angepasst damit es auf max 200 zeichen umgestellt wird.
+in Post.php hab ich eine find Methode eingebaut da wir uns jetzt darauf fokussieren die detailseite zu bekommen.
+das hab ich in dem Controller eingebunden und erweitert
+ich musste noch den Router anpassen was ich hier gemacht hab.
+Und am ende nurnoch die View erstellt als show.php damit wir die detailseite auch sehen.
+Jetzt nurnoch die Kommentarfunktion erstellen, wir brauchen ein neues Model für unsere kommentare also hab ich Comment.php erstellt
+Anschließend hab ich den PostController.php erweitert, show lädt jetzt auch die kommentare. addcomment hab ich noch als funktion eingebaut um das formular zu bearbeiten.
+die route musste ich dann noch registrieren in unserem FrontController(index.php), die view hab ich dann noch angepasst damit die kommentare angezeigt werden
+und wir kommentare einfügen können.
+
+eigentlich bin ich ja jetzt schon fertig aber
+3 sachen fehlen noch (bild upload "was eigentlich optional ist aber ich will es machen", frontend design, language switch button)
+ich fang mit dem bild upload an danach witme ich mich dem language switch button und am ende dann dem frontend design
+
+ordner angelegt für uploads wo die bilder gespeichert werden
+create.php angepasst sodass man jetzt auch bilder einfügen kann
+PostController.php create musste komplett angepasst werden damit die bilder empfangen werden und in den uploads Ordner reinverschoben werden.
+
+folgende sachen muss ich noch verbessern nachdem testen:
+(bild upload limiten, die zeit wird 1 stunde vorher angezeigt, usernamen generation darf KEINE leerzeichen beinhalten, bilderupload löschen beim resetten und
+startseite verlinkung auf login register sodass jeder user zu der homepage kommen kann)
+folgende sachen müssen ganz am ende noch gemacht werden: frontend verschönern und dokumentieren danach readme erstellen
+
+
+jetzt muss noch reset_database.bat angepasst werden damit alle bilder auch noch gelöscht werden, hab ich mithilfe ki gemacht
+
+bild upload wurde auf 5mb limited aber man könnte für die zukunft noch sich überlegen direkt ein compress feature einzubauen
+ich musste auch eine konfigurationsdatei erstellen und dort einstellen dass es server side auf 10mb erlaubt ist sodass keine fehlerauftreten
+im code ist es sowieso auf max 5mb eingestellt, soweit ich es verstanden hab war es vor dem einstellen auf 2mb gecappt server sided auch in der nginx default.conf
+dort einstellen dass es auf max 10mb ist.
+
+da der docker container auf utc zeit weltweit eingestellt ist müssen wir dem server sagen du bist in berlin (natürlich ist das nur optimal wenn man hier aus der region)
+kommt. in uploadsini hab ich die timezone eingestellt danach in der yml datei auch noch
+anscheinend kann man eine env datei machen und dort die timezone einstellen sodass es für person xy einfacher ist die timezone für sich einzustellen.
+das behalte ich im hinterkopf aber werde es nicht reinpacken nur als anmerkung hier nochmal erwähnt.
+
+register methode in AuthController angepasst sodass wenn man sich jetzt anmelden möchte ein nutzernamen zwischen 3 und 18 zeichen haben soll und kein leerzeichen
+erlaubt ist.
+
+
+so kurzer check was noch gemacht werden muss -> startseite verlinkung auf login register sodass jeder user zu der homepage kommen kann
+
+änder ich schnell in register.php und login.php um
+
+so alles getestet und alles funktioniert jetzt perfekt aber mich stört es dass ("kein bild" angezeigt wird wenn man kein bild uploaded, deswegen hab ich 2 optionen)
+1. option custom platzhalter bild
+2. option bild weg lassen in so einem fall und "kein bild" nicht anzeigen
+
+mich für option 2 entschieden da es echt komisch aussehen würde wenn 5 leute back to back kein bild hinpacken würden und da ein platzhalter ist
+eventuell "custom preset bilder" für platzhalterungen aber aktuell nicht relevant in meinem fall
+
+hab dann in home.php das bild weg gelassen.
+
+so von vorher fehlen 2 sachen noch (language switch button und frontend design)
+
+was ich noch anmerken will das aktuelle frontend design ist mithilfe ki erstellt worden damit ich schonmal eine gute übersicht habe und mich weiter dem backend
+witmen kann, mir ist wichtig das funktionalität und alle features korrekt und stabil sind bevor ich mich dem frontend design witme.
+
+ich witme mich erst dem language switch button
+neuen ordner angesetzt src/Lang da drin sind de.php und en.php
+ich nutz da arrays um einfach direkt xxxx
+
+alle methoden mithilfe ki anpassen lassen und in de und en auch bezeichnen lassen damit man weiß wo was benutzt wird
+de en language switch button auf jedem interface zusätzlich hinzugefügt
+
+mitten drin bei der klasse AuthController.php ist mir eingefallen dass man benutzernamen und passwort validierungen besser einbauen kann
+benutzernamen dürfen jetzt A-Z, 0-9 und _ beinhalten.
+Passwort min länge ist auf 8 zeichen gesetzt darf aber leerzeichen beinhalten
+
+
+fehlt nur noch frontend design für den feinschliff, dokumentieren und readme 
+
+idee noch ob ich sie umsetze bleibt noch offen: beispiel test posts accs etc damit man alles übersichtlich sieht als test
+
+ich mach zuerst dokumentieren mithilfe ki und passe alles selbständig an falls mir was nicht passt
+alles dokumentiert mithilfe ki
+noch .sh dateien erstellt für linux/macOS user
+die readme angefertigt
+
+erste version ist für github jetzt online ohne frontend design
+
