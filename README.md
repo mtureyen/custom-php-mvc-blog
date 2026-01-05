@@ -41,7 +41,7 @@ I have provided helper scripts to make managing the environment effortless.
    Visit [http://localhost:8080](http://localhost:8080) in your browser.
 
 3. **Reset / Clean Up (Optional):**
-   Double-click `reset_server.bat` to delete the database and uploaded images (Hard Reset).
+   Double-click `reset_database.bat` to delete the database and uploaded images (Hard Reset).
 
 4. **Stop the Server:**
    Double-click `stop_server.bat`.
@@ -51,7 +51,7 @@ I have provided helper scripts to make managing the environment effortless.
 First, ensure the scripts are executable: `chmod +x *.sh`
 
 1. **Start:** `./start_server.sh`
-2. **Reset:** `./reset_server.sh`
+2. **Reset:** `./reset_database.sh`
 3. **Stop:** `./stop_server.sh`
 
 ---

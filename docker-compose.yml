@@ -11,12 +11,24 @@
 services:
 
   # --- 1. PHP Application Container ---
-  # Builds the custom PHP image from the Dockerfile and runs the application logic.
+  # Builds the custom PHP image from the Dockerfile.
+  # This container handles the PHP processing and manages dependencies.
   app:
-    build: ./docker/php
+    build:
+      # Use the root directory as context to allow Docker to access composer.json
+      context: .
+      # Specifies the relative path to the Dockerfile
+      dockerfile: docker/php/Dockerfile
     volumes:
       # Syncs your local project folder with the container (for live development updates)
       - .:/var/www/html
+      
+      # IMPORTANT: PROTECTED VENDOR VOLUME
+      # This prevents your local (empty) vendor folder from overwriting the 
+      # vendor folder created inside the container during the build process.
+      # This fix solves the "autoload.php not found" error.
+      - /var/www/html/vendor
+      
       # Injects custom PHP settings (e.g., upload_max_filesize = 10M)
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
@@ -42,7 +54,7 @@ services:
       - app
 
   # --- 3. Database (MySQL) ---
-  # persistent storage for user data, posts, and comments.
+  # Persistent storage for user data, posts, and comments.
   db:
     image: mysql:8.0
     container_name: blog_db_container
