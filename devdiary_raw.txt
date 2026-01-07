@@ -4,7 +4,7 @@ in der ersten woche noch selber die basics gelernt und im video mitverfolgt wie 
 hab mich dann aber schnell eingefunden und verstanden dass ich dasselbe mit docker machen kann und da
 docker sowieso ein bonus ist hab ich mich für docker entschieden. im video wurde xampp und apache verwendet
 
-2 woche
+2-3 woche
 videos zu mvc framework login register angeschaut und gemerkt dass die projektstruktur ähnlich aber immer unterschiedlich ist
 KI am besten gefragt für ein rat und im nachhinein dann mich für eine src-struktur entschieden.
 ordner erstellt für die blog challenge (moderne src-struktur)
@@ -228,3 +228,15 @@ readme umgeändert und anschließend auf git commited mit
 git commit -m "Initial release: V1.1 - Complete documentation and new UI design"
 und
 git tag -a v1.1 -m "Version 1.1: Service Layer, Clean UI, Full Documentation"
+
+
+test cases noch machen damit die startseite voll ist und devdiary_de/en mit ki erstellen lassen die aktuelle datei auf devdiary_raw.txt umbenennen
+
+test cases in /tests gemacht mithilfe ki in tests/fixtures liegen die test bilder
+seed_data.bat und seed_data.sh erstellt damit man auch auf macOS/linux alles ausführen kann
+
+preview1.png, preview2.png, preview3.png und preview4.png erstellt sodass es jetzt wirklich previews gibt
+
+devdiary wird jetzt umbenannt auf devdiary_raw was ungefiltert ist und in devdiary_de und devdiary_en ist es chronologisch mit ki
+
+readme ganz wenig angepasst und rausgepushed

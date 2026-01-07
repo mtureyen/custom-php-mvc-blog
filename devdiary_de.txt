@@ -1,0 +1,92 @@
+================================================================================
+ENTWICKLERTAGEBUCH: Custom PHP MVC Blog
+================================================================================
+Dieses Dokument zeichnet die chronologische Entwicklung des Projekts auf – 
+von den ersten PHP-Grundlagen bis zur finalen Architektur mit Service Layer 
+und Docker-Containerisierung.
+
+--------------------------------------------------------------------------------
+WOCHE 1: Grundlagen & Setup
+--------------------------------------------------------------------------------
+
+[Phase 1: Einarbeitung in PHP & Umgebung]
+- PHP-Grundlagen anhand von Tutorials (Bro Code) gelernt und Syntax verstanden.
+- Einarbeitung in PDO (PHP Data Objects) für sichere Datenbankzugriffe.
+- Umgebung: Start mit XAMPP, dann Wechsel auf Docker für eine saubere Containerisierung.
+- Erste Analysen zur Logik von Login- und Registrierungssystemen.
+
+[Phase 2: Docker & Composer Init]
+- Docker Setup: Erstellung von Dockerfile, docker-compose.yml und Nginx-Config (default.conf).
+- Composer: Initialisierung der composer.json für das Autoloading des src-Verzeichnisses.
+
+--------------------------------------------------------------------------------
+WOCHE 2-3: Architektur & Core-Features
+--------------------------------------------------------------------------------
+
+[Phase 3: MVC-Struktur & Datenbank-Design]
+- Projektstruktur: Aufbau einer modernen src-Struktur nach Recherche und KI-Beratung.
+- Datenbank: Erstellung eines ER-Diagramms (Visualisierung via mermaid.live) zur Definition von Primary & Foreign Keys vor dem Coden.
+- Fokus: Bewusste Entscheidung gegen komplexe Features (Likes), um den Kernanforderungen ("Clean Code", MVC) gerecht zu werden.
+- Implementierung: Database.php Service erstellt. Nutzung der InnoDB-Engine für funktionierende Foreign Keys (ON DELETE CASCADE).
+
+[Phase 4: Routing & Controller]
+- Router: Simpler Router in index.php implementiert.
+- Controller: HomeController erstellt und OOP-Struktur verinnerlicht.
+- Auth: Zusammenlegung von Login und Register in einen zentralen AuthController.php.
+
+[Phase 5: Authentifizierung & User Model]
+- Automatisierung: init.sql erstellt und in docker-compose eingebunden für automatischen DB-Start.
+- User Model: User.php für DB-Operationen erstellt.
+- Sicherheit: Passwort-Hashing (password_hash) implementiert.
+- Frontend: Templates für Login und Register erstellt.
+- Session: Logout-Logik (Session destroy) eingebaut.
+
+--------------------------------------------------------------------------------
+WOCHE 4: Blog-Features & Deployment
+--------------------------------------------------------------------------------
+
+[Phase 6: Posts & CRUD]
+- Post Model: Post.php mit create() und findAll() erstellt.
+- Controller: Input-Validierung ($_POST) im Controller.
+- Views: Formular (create.php) und Listenansicht (home.php) erstellt.
+- Darstellung: Zeilenumbrüche (nl2br) und Textkürzung für Vorschauen eingebaut.
+
+[Phase 7: Detailansicht & Kommentare]
+- Detailseite: show.php und Controller-Methode show() implementiert.
+- Kommentare: Comment.php Model angelegt. Kommentare werden nun unter Posts geladen.
+
+[Phase 8: Vereinfachtes Deployment]
+- Batch-Skripte: start_server.bat und stop_server.bat erstellt, um die Nutzung ohne Terminal-Kenntnisse zu ermöglichen.
+
+--------------------------------------------------------------------------------
+WOCHE 5: Refactoring, Uploads & Sicherheit
+--------------------------------------------------------------------------------
+
+[Phase 9: Datei-Uploads & Konfiguration]
+- Feature: Bildupload eingebaut.
+- Config: Upload-Limit auf 5MB gesetzt (Code & Server-Config).
+- Zeitzone: uploads.ini erstellt (Europe/Berlin), da Docker UTC nutzt.
+
+[Phase 10: Validierung & UX]
+- Validierung: Strenge Regeln für Benutzernamen (3-18 Zeichen, keine Leerzeichen).
+- UX: Platzhalterbilder entfernt, wenn kein Bild hochgeladen wurde (Cleaner Look).
+- Internationalisierung: Ordner src/Lang erstellt. Globaler trans() Helper für DE/EN Wechsel.
+
+--------------------------------------------------------------------------------
+FINALE: Architektur-Upgrade & Design
+--------------------------------------------------------------------------------
+
+[Phase 11: Einführung Service Layer (Refactoring)]
+- Problem: Controller enthielten zu viel Logik (SQL, Validierung).
+- Lösung: Einführung einer Service-Schicht (PostService, UserService, CommentService, TemplateService).
+- Dependency Injection Light: Controller instanziieren ihre Services zentral im Konstruktor ("Werkzeuggürtel"-Prinzip).
+
+[Phase 12: Sicherheit & Clean Code]
+- Umstellung von Sanitizing auf "Strenge Validierung" (Allow-List).
+- Konsequente XSS-Prävention durch htmlspecialchars() im TemplateService.
+- 404 Handling: Fehlerseite und Routing-Logik ergänzt.
+
+[Phase 13: UI/UX & Release]
+- Design: Frontend komplett überarbeitet (Farben: #696FC7 / #A7AAE1). Clean UI.
+- Testing: Automated Database Seeding (tests/seed.php) für Testdaten entwickelt.
+- Release: Version 1.1 auf GitHub getagged. README finalisiert.

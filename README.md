@@ -8,7 +8,17 @@ A fully functional, lightweight CMS/Blog engine built from scratch using **nativ
 
 This project demonstrates a deep understanding of modern software architecture, featuring a strict **MVC** pattern enhanced with a **Service Layer**, secure authentication, and a custom **Clean UI** design system.
 
-![App Preview](preview.png)
+---
+
+## 📸 Gallery
+
+| Homepage (Feed) | Post Detail View |
+|:---:|:---:|
+| ![Home](preview1.png) | ![Detail](preview2.png) |
+
+| Login | Registration |
+|:---:|:---:|
+| ![Login](preview3.png) | ![Register](preview4.png) |
 
 ---
 
@@ -42,10 +52,13 @@ Helper scripts are provided to make managing the environment effortless.
 2.  **Open the Application:**
     Visit [http://localhost:8080](http://localhost:8080) in your browser.
 
-3.  **Reset / Clean Up (Optional):**
+3.  **Populate Test Data (Optional):**
+    Double-click `seed_data.bat` to automatically generate users, blog posts with images, and comments.
+
+4.  **Reset / Clean Up:**
     Double-click `reset_database.bat` to delete the database and uploaded images (Hard Reset).
 
-4.  **Stop the Server:**
+5.  **Stop the Server:**
     Double-click `stop_server.bat`.
 
 ### 🐧 Quick Start (Linux / macOS)
@@ -53,15 +66,20 @@ Helper scripts are provided to make managing the environment effortless.
 First, ensure the scripts are executable: `chmod +x *.sh`
 
 1.  **Start:** `./start_server.sh`
-2.  **Reset:** `./reset_database.sh`
-3.  **Stop:** `./stop_server.sh`
+2.  **Seed Data:** `./seed_data.sh` (Optional)
+3.  **Reset:** `./reset_database.sh`
+4.  **Stop:** `./stop_server.sh`
 
 ---
 
 ## 🧠 Developer Diary
 
-I have included a `devdiary.txt` file in the root directory.
-If you are interested in the **"Why"** behind the code, check this file. It contains a log of my thought process, challenges faced, and the reasoning behind specific architectural decisions (like moving to Services) made during development.
+I have included detailed developer diaries in the root directory.
+If you are interested in the **"Why"** behind the code, check these files. They contain a chronological log of my thought process, challenges faced, and the reasoning behind specific architectural decisions.
+
+* `devdiary_en.txt` (English)
+* `devdiary_de.txt` (German)
+* `devdiary_raw.txt` (German)
 
 ---
 
@@ -79,11 +97,11 @@ The project follows a clean separation of concerns:
 │   ├── Lang/           # Translation arrays (en.php, de.php)
 │   └── helpers.php     # Global helper functions (trans())
 ├── templates/          # Logic-less HTML Views (Home, Auth, Posts)
+├── tests/              # Automated database seeding scripts
 ├── database/           # SQL initialization scripts
 └── docker/             # Configuration for Nginx and PHP
 
 ```
-
 ---
 
 ## 🗄️ Database Schema
