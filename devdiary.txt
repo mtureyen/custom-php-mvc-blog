@@ -154,3 +154,77 @@ die readme angefertigt
 
 erste version ist für github jetzt online ohne frontend design
 
+bin auf bugs zugestoßen wo ich in docker-compose.yml und dockerfile was ändern musste da es probleme gab mit composer
+hab die gefixt und dann wieder auf github hochgepushed mit einer readme
+
+mir wurde gesagt ich könnte ein templateserver einführen, im gleichen service könnte man fehlermeldungen festhalten die ausgegeben werden sollen und noch ein Service
+each Entity anlegen, die logik würde in den Controllern dann reduziert werden.
+die Logik würde in den Templates ebenfalls in den Services oder Models laufen.
+
+so es gab ein mini archtiektur-wechsel hierdurch zwar verwenden wir immernoch das mvc prinzip jedoch mit einer service schicht
+der neue ablauf ist, dass der controller die requests entgegen nimmt danach verarbeitet unser service die logik (validierung uploads berechnungen)
+danach redet unser model mit der datenbank und unser template(view) gibt die sachen aus
+
+unser templateservice kümmert sich um rendering und verwaltet fehlermeldungen in einem array damit templates mehrere fehler gleichzeitig anzeigen können.
+
+unser postservice übernimmt den kompletten datei upload und verschiebt nach public/uploads
+bereitet ebenfalls die daten für den view auf(datum fromatieren und vorschau text kürzen)
+
+unser userservice übernimmt login und registierung und führt strenge validierung durch (whitelist mit regex anstatt sanitizing)
+kümmert sich auch um das passwort hashing (password_hash/verify)
+
+commentservice kapselt die logik für das erstellen und abrufen von kommentaren
+
+unsere controller haben kein file handling mehr drin, keine sql logik oder model instanziierung im controller
+der controller ruft nur noch $service->macheEtwas() auf und entscheidet anhand des Rückgabewertes, ob er weiterleitet oder ein Fehler an den TemplateService gibt.
+
+sämtliche php logik ebenfalls entfernt von den templates/views kein date() mehr sondern das datum kommt fertig als $post['display_date'] vom Service
+kein mb_substr() mehr kommt ebenso als preview_content vom service
+fehler anzeige wurde umgebaut von einer einzelvariable auf eine schleife über errors für kompatibilität mit dem templateservice
+htmlspecialchars wird immernoch genutzt gegen xss angriffe
+
+Front Controller index.php wurde noch angepasst indem ich es mit einer 404 fehlerbehandlung erweitert hab.
+404 page wurde erstellt in templates/404.php für nicht gefundene Routen
+
+Models sind gleich geblieben
+
+was wichtig war wir sanitizen nicht mehr da wir auf strenge Validierung (nur erlaubte Zeichen zulassen) statt Sanitizing, um Sicherheitsprobleme gar nicht erst entstehen
+zu lassen.
+
+alle controller folgen nun dem gleichen muster
+
+was auch wichtig war bei der änderung war, wie die controller zugriff auf ihre benötigten dienste(services) erhalten.
+vorher wurden instanzen von models oder klassen wild verstreut innerhalb der einzelnen methoden erzeugt (Hardcoded Dependencies). jede methode, die daten brauchte
+machte ein new Post() oder new User()
+
+Nachteil: Es war schwer zu erkennen, welche externen klassen ein controller eigentlich benötigt, um zu funktionieren. zudem wurde code dupliziert.
+
+die lösung war eine constructor instantiation: der code wurde so umgebaut, dass alle benötigten abhängigkeiten zentral im __construct des Controllers definiert und
+initialisiert werden.
+
+man nennt das anscheinend "dependency injection light"  weil es sich um eine vereinfachte und nicht so ausgeklügelte Form der
+dependency injection handelt. bei "echter" dependency injection, wie in großen frameworks wie symfony oder laravel, werden instanzen von außen in den konstruktor
+hineingereicht, etwa durch einen di-container (z.b. new postcontroller(new postservice())). bei der "light"-variante erstellt sich der controller jedoch die
+benötigten werkzeuge im konstruktor selbst, ohne einen umfassenden di-container zu nutzen. das bedeutet, es gibt keinen zentralen mechanismus, der die abhängigkeiten
+automatisch auflöst und verwaltet – alles wird manuell im konstruktor zusammengebaut, was die handhabung vereinfacht, aber auch weniger flexibel und skalierbar ist.
+
+vorteile sind:
+sichtbarkeit: ein blick reicht um den werkzeuggürtel des controllers zu sehen man weiß sofort womit er arbeitet
+
+dry prinzip: ich muss nicht in 5 verschiedenen methoden new PostService() schreiben
+
+wartbarkeit: wenn ich den PostService später austauschen will, muss ich das nur an einer Stelle (im Konstruktor) tun, statt in jeder einzelnen methode
+
+de.php und en.php angepasst noch und bei home.php <title><?= trans('blog_title') ?></title> eingebaut
+
+
+alles wieder neu dokumentiert mithilfe ki
+
+danach alle views mit den farbpaletten #696FC7 und #A7AAE1 mithilfe ki angepasst, sodass ich zufrieden war mit dem frontend
+(so kurzfristig ein frontend framework zu benutzen war nicht mein ziel, da im vordergrund für mich backend und funktionalität wichtig waren)
+
+
+readme umgeändert und anschließend auf git commited mit
+git commit -m "Initial release: V1.1 - Complete documentation and new UI design"
+und
+git tag -a v1.1 -m "Version 1.1: Service Layer, Clean UI, Full Documentation"

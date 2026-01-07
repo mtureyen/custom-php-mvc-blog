@@ -86,6 +86,7 @@ switch ($requestUri) {
     default:
         // Set HTTP response code and show error message
         http_response_code(404);
-        echo "404 - Page not found :(";
+        // Loading 404.php template
+        require __DIR__ . '/../templates/404.php';
         break;
 }
