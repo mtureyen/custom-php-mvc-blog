@@ -26,13 +26,15 @@ class AuthController
     private TemplateService $templateService;
 
     /**
-     * Initializes the controller and its dependencies.
-     * * Instantiates the necessary services for user management and templating.
+     * Initializes the controller with its required dependencies.
+     *
+     * @param UserService $userService Service for user authentication and management.
+     * @param TemplateService $templateService Service for rendering views.
      */
-    public function __construct()
+    public function __construct(UserService $userService, TemplateService $templateService)
     {
-        $this->userService = new UserService();
-        $this->templateService = new TemplateService();
+        $this->userService = $userService;
+        $this->templateService = $templateService;
     }
 
     /**

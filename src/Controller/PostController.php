@@ -32,14 +32,17 @@ class PostController
     private TemplateService $templateService;
 
     /**
-     * Initializes the controller and its dependencies.
-     * * Instantiates the necessary services for post and comment management.
+     * Initializes the controller with its required dependencies.
+     *
+     * @param PostService $postService Service for handling blog posts.
+     * @param CommentService $commentService Service for handling comments.
+     * @param TemplateService $templateService Service for rendering views.
      */
-    public function __construct()
+    public function __construct(PostService $postService, CommentService $commentService, TemplateService $templateService)
     {
-        $this->postService = new PostService();
-        $this->commentService = new CommentService();
-        $this->templateService = new TemplateService();
+        $this->postService = $postService;
+        $this->commentService = $commentService;
+        $this->templateService = $templateService;
     }
 
     /**

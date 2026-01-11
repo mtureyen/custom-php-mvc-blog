@@ -26,14 +26,16 @@ class HomeController
     private TemplateService $templateService;
 
     /**
-     * Initializes the controller and its dependencies.
-     * * Instantiates the services required for the homepage logic.
+     * Initializes the controller with its required dependencies.
+     *
+     * @param PostService $postService Service to retrieve post data.
+     * @param TemplateService $templateService Service for rendering views.
      */
-    public function __construct()
+    public function __construct(PostService $postService, TemplateService $templateService)
     {
         // Initialize required services
-        $this->postService = new PostService();
-        $this->templateService = new TemplateService();
+        $this->postService = $postService;
+        $this->templateService = $templateService;
     }
 
     /**

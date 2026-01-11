@@ -6,7 +6,7 @@
 
 A fully functional, lightweight CMS/Blog engine built from scratch using **native PHP** (no frameworks), **MySQL**, and **Docker**.
 
-This project demonstrates a deep understanding of modern software architecture, featuring a strict **MVC** pattern enhanced with a **Service Layer**, secure authentication, and a custom **Clean UI** design system.
+This project demonstrates a deep understanding of modern software architecture, featuring a strict **MVC** pattern, **Dependency Injection**, a separate **Service Layer**, and a custom **Clean UI** design system.
 
 ---
 
@@ -24,6 +24,7 @@ This project demonstrates a deep understanding of modern software architecture, 
 
 ## ✨ Key Features
 
+* **Dependency Injection (DI):** Implements **Inversion of Control (IoC)**. Dependencies (Services) are injected into Controllers via the constructor, ensuring loose coupling and high testability.
 * **Service-Oriented Architecture:** Business logic is strictly separated from Controllers (`Service Layer`), ensuring maintainability and scalability.
 * **Strict MVC Pattern:** Clear distinction between Data (`Model`), Presentation (`Templates`), and Logic (`Controller`).
 * **Modern Clean UI:** A custom, responsive design system using a refined color palette (Royal Blue/Lavender) and card-based layouts.
@@ -85,7 +86,7 @@ If you are interested in the **"Why"** behind the code, check these files. They 
 
 ## 📂 Project Structure
 
-The project follows a clean separation of concerns:
+The project follows a clean separation of concerns with a central **Composition Root** in `index.php`:
 
 ```plaintext
 /project-root

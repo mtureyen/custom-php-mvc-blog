@@ -90,3 +90,20 @@ FINALE: Architecture Upgrade & Design
 - Design: Completely overhauled frontend (Colors: #696FC7 / #A7AAE1). Clean UI.
 - Testing: Developed Automated Database Seeding (tests/seed.php) for test data.
 - Release: Tagged Version 1.1 on GitHub. Finalized README.
+
+[Phase 14: Documentation & Automation (v1.2)]
+- Enhancement: Added a visual gallery to the README to showcase the Clean UI.
+- Automation: Included `tests/seed_data` scripts to allow automated population of the database with test users and posts.
+- Transparency: Published developer diaries (Raw, EN, DE) to document the learning journey.
+- Release: Tagged Version 1.2 on GitHub.
+
+[Phase 15: Architectural Refactor - Inversion of Control (v1.3)]
+- Review: Realized that Controllers were still "tightly coupled" because they instantiated services internally (`new Service()`). This was "Dependency Instantiation," not true "Dependency Injection."
+- Refactor: Transformed `index.php` into a strict **Composition Root**.
+- Responsibilities of index.php:
+  1. Bootstrapping (Autoloading, Sessions, Helpers).
+  2. Dependency Wiring (Instantiating services centrally and injecting them into Controllers).
+  3. Routing (Dispatching the request).
+- Code Quality: Updated PHPDoc comments to reflect the new injection pattern using AI assistance.
+- Outcome: Achieved true Inversion of Control (IoC), resulting in loose coupling and improved testability.
+- Release: Tagged Version 1.3 on GitHub.

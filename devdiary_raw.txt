@@ -239,4 +239,22 @@ preview1.png, preview2.png, preview3.png und preview4.png erstellt sodass es jet
 
 devdiary wird jetzt umbenannt auf devdiary_raw was ungefiltert ist und in devdiary_de und devdiary_en ist es chronologisch mit ki
 
-readme ganz wenig angepasst und rausgepushed
+readme ganz wenig angepasst und rausgepushed als Release v1.2: Added Gallery, Database Seeding & Developer Diaries
+
+ich hab das anscheinend die dependency injection hardcoded.
+hab da immer new service gemacht, was eigentlich eine dependency instantiation ist und nicht injection.
+hab controller und index.php refactored, damit das nicht mehr hardcoded ist.
+
+unsere index.php ist jetzt ein composition root und macht:
+
+und ist verantwortlich für:
+1.bootstrapping (autoload, sessions...)
+2.dependency wiring (services erstellen und in controller reinreichen)
+3.routing
+
+
+
+mithilfe ki paar stellen nochmal neu kommentiert.
+hab mit ki die stellen nochmal neu und sauber kommentiert. readme auch minimal angepasst und die dependency injection als feature erwähnt.
+
+dann alles rausgepushed und getaggt mit git tag -a v1.3 -m "Version 1.3: Refactored to use Dependency Injection (IoC)"
