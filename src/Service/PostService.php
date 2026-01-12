@@ -17,16 +17,23 @@ use App\Model\Post;
 class PostService
 {
     /**
-     * @var Post The database model for post operations.
+     * @var Post The injected Post model (Data Access Object).
      */
     private Post $postModel;
 
     /**
-     * Initializes the service and its dependencies.
+     * Constructor Injection.
+     *
+     * The service receives the specific Data Access Object (Model) it needs.
+     * By injecting the Model instance instead of creating it internally, we achieve:
+     * 1. Loose Coupling: The Service doesn't need to know how the DB connection is built.
+     * 2. Testability: Ideal for unit testing with mocked Models.
+     *
+     * @param Post $postModel The data access instance for posts.
      */
-    public function __construct()
+    public function __construct(Post $postModel)
     {
-        $this->postModel = new Post();
+        $this->postModel = $postModel;
     }
 
     /**

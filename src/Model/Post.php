@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use App\Service\Database;
 use PDO;
 
 /**
@@ -14,18 +13,22 @@ use PDO;
 class Post
 {
     /**
-     * @var PDO The active database connection instance.
+     * @var PDO The injected database connection instance.
      */
     private PDO $conn;
 
     /**
-     * Initializes the Post model.
-     * Establishes a connection to the database.
+     * Constructor with Dependency Injection.
+     *
+     * Accepts a pre-configured PDO instance instead of creating a new one.
+     * This allows the Service Layer to manage the database connection lifecycle
+     * and ensures that all models share the same transaction context.
+     *
+     * @param PDO $pdo The active PDO connection.
      */
-    public function __construct()
+    public function __construct(PDO $pdo)
     {
-        $db = new Database();
-        $this->conn = $db->getConnection();
+        $this->conn = $pdo;
     }
 
     /**

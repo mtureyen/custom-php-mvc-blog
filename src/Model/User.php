@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use App\Service\Database;
 use PDO;
 use PDOException;
 
@@ -15,18 +14,22 @@ use PDOException;
 class User
 {
     /**
-     * @var PDO The active database connection instance.
+     * @var PDO The injected database connection instance.
      */
     private PDO $conn;
 
     /**
-     * Initializes the User model.
-     * Establishes a connection to the database.
+     * Constructor with Dependency Injection.
+     *
+     * Receives a pre-configured PDO instance.
+     * By injecting the connection, we ensure that the User model participates
+     * in the same transaction context as other models and avoids redundant connections.
+     *
+     * @param PDO $pdo The active PDO connection.
      */
-    public function __construct()
+    public function __construct(PDO $pdo)
     {
-        $db = new Database();
-        $this->conn = $db->getConnection();
+        $this->conn = $pdo;
     }
 
     /**

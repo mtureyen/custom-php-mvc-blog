@@ -6,7 +6,7 @@
 
 A fully functional, lightweight CMS/Blog engine built from scratch using **native PHP** (no frameworks), **MySQL**, and **Docker**.
 
-This project demonstrates a deep understanding of modern software architecture, featuring a strict **MVC** pattern, **Dependency Injection**, a separate **Service Layer**, and a custom **Clean UI** design system.
+This project demonstrates a deep understanding of modern software architecture, featuring a strict **MVC** pattern, **Pure Dependency Injection**, a separate **Service Layer**, and a custom **Clean UI** design system.
 
 ---
 
@@ -24,7 +24,7 @@ This project demonstrates a deep understanding of modern software architecture, 
 
 ## ✨ Key Features
 
-* **Dependency Injection (DI):** Implements **Inversion of Control (IoC)**. Dependencies (Services) are injected into Controllers via the constructor, ensuring loose coupling and high testability.
+* **Pure Dependency Injection:** Implements strict **Inversion of Control (IoC)**. The `index.php` acts as the **Composition Root**, constructing the full dependency chain (Database connection → Models → Services → Controllers) for maximum testability and loose coupling.
 * **Service-Oriented Architecture:** Business logic is strictly separated from Controllers (`Service Layer`), ensuring maintainability and scalability.
 * **Strict MVC Pattern:** Clear distinction between Data (`Model`), Presentation (`Templates`), and Logic (`Controller`).
 * **Modern Clean UI:** A custom, responsive design system using a refined color palette (Royal Blue/Lavender) and card-based layouts.
@@ -93,7 +93,7 @@ The project follows a clean separation of concerns with a central **Composition 
 ├── public/             # Webroot (Entry point index.php, Assets, Uploads)
 ├── src/
 │   ├── Controller/     # Handles incoming HTTP requests
-│   ├── Model/          # Database interaction (PDO)
+│   ├── Model/          # Data Access Layer (Table Data Gateways)
 │   ├── Service/        # Business Logic, Validation & File Processing
 │   ├── Lang/           # Translation arrays (en.php, de.php)
 │   └── helpers.php     # Global helper functions (trans())

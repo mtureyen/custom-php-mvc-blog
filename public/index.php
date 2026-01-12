@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 /**
  * Application Entry Point (Front Controller).
- * * This script acts as the "Composition Root" of the application.
- * It is responsible for:
- * 1. Bootstrapping (Autoloading, Sessions, Helpers).
- * 2. Dependency Wiring (Creating services and injecting them).
- * 3. Routing (Dispatching requests to the correct controller).
+ *
+ * This script acts as the "Composition Root" of the application.
+ * It strictly implements Dependency Injection (IoC) to ensure loose coupling.
+ *
+ * Execution Flow:
+ * 1. Bootstrap (Autoloading & Helpers).
+ * 2. Database (Create single connection).
+ * 3. Wiring (Inject DB -> Models -> Services).
+ * 4. Dispatching (Inject Services -> Controllers).
  */
 
 session_start();
@@ -18,6 +22,7 @@ use App\Controller\AuthController;
 use App\Controller\PostController;
 
 // Import Services
+use App\Service\Database;
 use App\Service\UserService;
 use App\Service\PostService;
 use App\Service\CommentService;
@@ -29,20 +34,34 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Load global helper functions (e.g., translation service)
 require_once __DIR__ . '/../src/helpers.php';
 
+// 2. Initalize Database
+// We establish the database connection ONCE. This instance is then passed
+// down the chain, ensuring efficiency and a single source of truth.
+$database = new Database();
+$pdo = $database->getConnection();
 
-// 2. Dependency Wiring (Composition Root)
-// We instantiate all services here centrally. This allows us to inject
-// dependencies into controllers, keeping them loosely coupled and testable.
+
+// 3. Data access layer (Models)
+// Models are instantiated here and receive the active PDO connection.
+// They are responsible for raw SQL operations.
+$userModel    = new \App\Model\User($pdo);
+$postModel    = new \App\Model\Post($pdo);
+$commentModel = new \App\Model\Comment($pdo);
+
+// 4. Business logic layer (Services)
+// Pure Dependency Injection:
+// Services receive their specific Models via constructor injection.
+// They contain the business logic and remain independent of the database driver.
 $templateService = new TemplateService();
-$userService     = new UserService();    
-$postService     = new PostService();     
-$commentService  = new CommentService();  
+$userService     = new UserService($userModel);
+$postService     = new PostService($postModel);
+$commentService  = new CommentService($commentModel);
 
-// 3. Parse the Request URI
+// 5. Parse the Request URI
 // Extract the path (e.g., "/login") while ignoring query parameters (e.g., "?id=1")
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// 4. Routing Logic (Dispatcher)
+// 6. Routing Logic (Dispatcher)
 // Match the URI to a controller action and inject required services.
 switch ($requestUri) {
     // --- Homepage ---
@@ -101,7 +120,7 @@ switch ($requestUri) {
         
     // --- 404 Not Found ---
     default:
-        // Set HTTP response code and show error message
+        // Set HTTP response code and render 404 view via TemplateService
         http_response_code(404);
         // Loading 404.php template
         $templateService->render('404');

@@ -107,3 +107,14 @@ FINALE: Architektur-Upgrade & Design
 - Code-Qualität: PHPDoc-Kommentare mithilfe von KI aktualisiert, um das neue Injection-Pattern abzubilden.
 - Ergebnis: Echtes Inversion of Control (IoC) erreicht, was zu loser Kopplung und besserer Testbarkeit führt.
 - Release: Version 1.3 auf GitHub getagged.
+
+[Phase 16: Finaler Architekturschliff - Reine Dependency Injection (v1.4)]
+- Kritische Prüfung: Festgestellt, dass Services ihre Models intern instanziierten (`new Model($pdo)`). Das war eine versteckte Kopplung ("Tight Coupling").
+- Refactoring: Die Instanziierung der Models komplett in die Composition Root (`index.php`) verlagert.
+- Die Abhängigkeitskette: Die `index.php` baut nun den gesamten Graphen auf:
+  1. Datenbankverbindung erstellen ($pdo).
+  2. Models instanziieren ($pdo injizieren).
+  3. Services instanziieren (Models injizieren).
+  4. Controller instanziieren (Services injizieren).
+- Ergebnis: 100% saubere Dependency Injection erreicht. Services sind nun vollständig von der konkreten Model-Erstellung entkoppelt.
+- Release: Version 1.4 auf GitHub getagged.

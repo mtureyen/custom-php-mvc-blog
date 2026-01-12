@@ -15,16 +15,24 @@ use App\Model\Comment;
 class CommentService
 {
     /**
-     * @var Comment The database model for comment operations.
+     * @var Comment The injected Comment model (Data Access Object).
      */
     private Comment $commentModel;
 
     /**
-     * Initializes the service and its dependencies.
+     * Constructor Injection.
+     *
+     * Instead of creating the Model internally (which would require a DB connection),
+     * this service receives a fully instantiated Model.
+     * * Benefits:
+     * 1. Decoupling: The Service does not need to know about PDO or Database details.
+     * 2. Testability: We can easily inject a mock Model for unit testing.
+     *
+     * @param Comment $commentModel The data access instance for comments.
      */
-    public function __construct()
+    public function __construct(Comment $commentModel)
     {
-        $this->commentModel = new Comment();
+        $this->commentModel = $commentModel;
     }
 
     /**

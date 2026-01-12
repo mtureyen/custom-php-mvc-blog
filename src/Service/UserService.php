@@ -15,16 +15,23 @@ use App\Model\User;
 class UserService
 {
     /**
-     * @var User The database model for user operations.
+     * @var User The injected User model (Data Access Object).
      */
     private User $userModel;
 
     /**
-     * Initializes the service and its dependencies.
+     * Constructor Injection.
+     *
+     * The service receives the fully instantiated User Model.
+     * This promotes a clean separation of concerns:
+     * - The Service handles "How to hash passwords" and "When to allow login".
+     * - The Model handles "How to select/insert users in the database".
+     *
+     * @param User $userModel The data access instance for users.
      */
-    public function __construct()
+    public function __construct(User $userModel)
     {
-        $this->userModel = new User();
+        $this->userModel = $userModel;
     }
 
     /**

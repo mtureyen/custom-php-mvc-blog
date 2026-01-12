@@ -258,3 +258,16 @@ mithilfe ki paar stellen nochmal neu kommentiert.
 hab mit ki die stellen nochmal neu und sauber kommentiert. readme auch minimal angepasst und die dependency injection als feature erwähnt.
 
 dann alles rausgepushed und getaggt mit git tag -a v1.3 -m "Version 1.3: Refactored to use Dependency Injection (IoC)"
+
+
+hab gemerkt, dass im service immer noch "new model($pdo)" stand. das ist ja eigentlich auch nicht clean, weil der service dann fest an das model gebunden ist.
+habs jetzt so umgebaut, dass die index.php die komplette kette baut:
+1. erst die db verbindung ($pdo)
+2. dann die models (mit $pdo)
+3. dann die services (mit den models)
+4. dann die controller (mit den services)
+
+jetzt ist es 100% clean dependency injection von oben bis unten.
+kurz die kommentare noch angepasst mit ki
+
+rausgepushed als v1.4
